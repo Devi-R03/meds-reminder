@@ -53,14 +53,14 @@ const Dashboard = () => {
     e.preventDefault();
     if (!name || !dosage) return;
 
-    const { error } = await supabase.from("medications").insert([
+    const { data, error } = await supabase.from("medications").insert([
       {
         name,
         dosage,
         user_id: user?.id,
         taken_date: null,
       },
-    ]);
+    ]).select()
 
     if (error) {
       alert(`failed to add medications ${error.message}`);
