@@ -9,6 +9,8 @@ const Dashboard = () => {
   const [medications, setMedications] = useState([]);
   const [careTaker, setCareTaker] = useState(false);
 
+  const navigate = useNavigate();
+
   const isTakenToday = (takenDate) => {
     if (!takenDate) return false;
 
@@ -29,6 +31,7 @@ const Dashboard = () => {
         setUser(data.user);
       } else {
         alert(error.message);
+        navigate("/");
       }
 
       const { data: meds, error: medsError } = await supabase
@@ -63,6 +66,7 @@ const Dashboard = () => {
       alert(`failed to add medications ${error.message}`);
     } else {
       alert("successfully added");
+      setMedications((prev) => [...prev, ...data]);
       setName("");
       setDosage("");
     }
