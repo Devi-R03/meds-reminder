@@ -35,7 +35,7 @@ const Login = () => {
     >
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm space-y-4"
+        className="bg-white p-6 mx-4 sm:mx-auto rounded-lg shadow-lg w-full max-w-sm space-y-4"
       >
         <h2 className="text-xl font-bold text-center">
           {isLogin ? "Login" : "sign-up"}

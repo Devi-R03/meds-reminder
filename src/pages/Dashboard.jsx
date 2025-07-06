@@ -53,14 +53,17 @@ const Dashboard = () => {
     e.preventDefault();
     if (!name || !dosage) return;
 
-    const { data, error } = await supabase.from("medications").insert([
-      {
-        name,
-        dosage,
-        user_id: user?.id,
-        taken_date: null,
-      },
-    ]).select()
+    const { data, error } = await supabase
+      .from("medications")
+      .insert([
+        {
+          name,
+          dosage,
+          user_id: user?.id,
+          taken_date: null,
+        },
+      ])
+      .select();
 
     if (error) {
       alert(`failed to add medications ${error.message}`);
@@ -105,14 +108,14 @@ const Dashboard = () => {
         </div>
 
         {!careTaker && (
-          <div className="flex items-center justify-center my-10 ">
-            <form className=" bg-red-100 flex items-center justify-start  flex-col  rounded space-y-5  px-50 py-10">
+          <div className="flex items-center justify-center my-10 px-4">
+            <form className=" bg-red-100 w-full max-w-md flex flex-col items-center rounded space-y-5 p-6 shadow-md">
               <h3 className="font-bold text-2xl">Medications Form</h3>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="border rounded px-20 py-3 "
+                className="w-full border rounded px-4 py-3 "
                 placeholder="Enter your medications"
                 required
               ></input>
@@ -121,14 +124,14 @@ const Dashboard = () => {
                 type="text"
                 value={dosage}
                 onChange={(e) => setDosage(e.target.value)}
-                className="border rounded px-20 py-3"
+                className="w-full border rounded px-4 py-3"
                 placeholder="Enter your dosage"
                 required
               ></input>
               <br />
               <button
                 onClick={handleAddMedications}
-                className="rounded bg-green-500 px-5 py-2 text-white font-bold cursor-pointer"
+                className="w-full rounded bg-green-500 px-5 py-2 text-white font-bold cursor-pointer"
               >
                 Add medications
               </button>
@@ -143,49 +146,51 @@ const Dashboard = () => {
             </h2>
 
             {medications.length === 0 ? (
-              <p className="mb-5 text-2xl text-center font-bold text-red">
+              <p className="mb-5 text-2xl text-center font-bold text-red-600">
                 no medications added yet
               </p>
             ) : (
-              <table className="table-auto w-full border border-collapse">
-                <thead>
-                  <tr className="bg-gray-200">
-                    <th className="border px-4 py-2">#</th>
-                    <th className="border px-4 py-2">Name</th>
-                    <th className="border px-4 py-2">Dosage</th>
-                    <th className="border px-4 py-2">Taken</th>
-                    <th className="border px-4 py-2">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {medications.map((med, index) => {
-                    const today = new Date().toISOString().split("T")[0];
-                    const isTaken = isTakenToday(med.taken_date);
-                    return (
-                      <tr key={med.id}>
-                        <td className="border px-4 py-2">{index + 1}</td>
-                        <td className="border px-4 py-2">{med.name}</td>
-                        <td className="border px-4 py-2">{med.dosage}</td>
-                        <td className="border px-4 py-2">
-                          {isTaken ? "✅ Yes" : "❌ No"}
-                        </td>
-                        <td className="border px-4 py-2">
-                          {!isTaken ? (
-                            <button
-                              className="bg-green-500 text-white px-3 py-1 rounded text-sm"
-                              onClick={() => markAsTaken(med.id)}
-                            >
-                              Mark as Taken
-                            </button>
-                          ) : (
-                            <p>completed</p>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+              <div className="overflow-x-auto">
+                <table className="table-auto min-w-full border border-collapse">
+                  <thead>
+                    <tr className="bg-gray-200">
+                      <th className="border px-4 py-2">#</th>
+                      <th className="border px-4 py-2">Name</th>
+                      <th className="border px-4 py-2">Dosage</th>
+                      <th className="border px-4 py-2">Taken</th>
+                      <th className="border px-4 py-2">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {medications.map((med, index) => {
+                      const today = new Date().toISOString().split("T")[0];
+                      const isTaken = isTakenToday(med.taken_date);
+                      return (
+                        <tr key={med.id}>
+                          <td className="border px-4 py-2">{index + 1}</td>
+                          <td className="border px-4 py-2">{med.name}</td>
+                          <td className="border px-4 py-2">{med.dosage}</td>
+                          <td className="border px-4 py-2">
+                            {isTaken ? "✅ Yes" : "❌ No"}
+                          </td>
+                          <td className="border px-4 py-2">
+                            {!isTaken ? (
+                              <button
+                                className="bg-green-500 text-white px-3 py-1 rounded text-sm"
+                                onClick={() => markAsTaken(med.id)}
+                              >
+                                Mark as Taken
+                              </button>
+                            ) : (
+                              <p>completed</p>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             )}
           </div>
         )}
